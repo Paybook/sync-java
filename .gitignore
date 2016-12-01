@@ -1,6 +1,8 @@
 
 # Created by https://www.gitignore.io/api/java,maven,eclipse
 
+.DS_Store
+
 ### Maven ###
 target/
 pom.xml.tag
