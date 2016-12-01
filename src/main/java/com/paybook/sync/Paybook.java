@@ -1,6 +1,7 @@
 package com.paybook.sync;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +40,7 @@ public class Paybook {
 	
 	public static void init(String api_key){
 		Paybook.api_key = api_key;
+		Paybook.logger = false;
     }//End of init
 	
 	public static void init(String api_key,Boolean logger){
@@ -46,25 +48,54 @@ public class Paybook {
 		Paybook.logger = logger;
     }//End of init
 
-	public static JSONObject call(String endpoint, Method method, HashMap<String, Object> data, String URL) throws Error{
+	public static JSONObject call(String endpoint, Method method, HashMap<String, Object> data, Map<String, String> headers, String URL) throws Error{
 		
 		try {
 			HttpResponse<JsonNode> jsonResponse = null;
+			JSONObject jsonObject = new JSONObject();
+
+			int status = 0;
+			String statusText = "";
 			if(URL == null){
 				URL = paybook_url + endpoint;
 			}//End of IF
-			jsonResponse = Unirest.post(URL)
-					.header("accept", "application/json")
-			        .header("Content-Type", "application/json")
+			
+			if(headers == null){
+				jsonResponse = Unirest.post(URL)
+						.header("accept", "application/json")
+				        .header("Content-Type", "application/json")
+						.queryString("_method", method.getValue())
+						.body(new JSONObject(data))
+						.asJson();
+				jsonObject = jsonResponse.getBody().getObject();
+				status = jsonResponse.getStatus();
+				statusText = jsonResponse.getStatusText();
+			}else if(headers.get("Content-Type").equals("application/json")){
+				jsonResponse = Unirest.post(URL)
+						.headers(headers)
+						.queryString("_method", method.getValue())
+						.body(new JSONObject(data))
+						.asJson();
+				jsonObject = jsonResponse.getBody().getObject();
+				status = jsonResponse.getStatus();
+				statusText = jsonResponse.getStatusText();
+			}else if(headers.get("Content-Type").equals("application/xml")){
+				HttpResponse<String> content = Unirest.post(URL)
+					.headers(headers)
 					.queryString("_method", method.getValue())
 					.body(new JSONObject(data))
-					.asJson();
-			JSONObject jsonObject = jsonResponse.getBody().getObject();
+					.asString();
+				String contentString = content.getBody().toString();
+				jsonObject.put("content", contentString);
+				status = content.getStatus();
+				statusText = content.getStatusText();
+			}//End of IF
 			log(jsonObject.toString());
-			if (jsonResponse.getStatus() >= 200 && jsonResponse.getStatus() < 400){
+			
+			if (status >= 200 && status < 400){
 				return jsonObject;
 			}else{
-				throw new Error(jsonResponse.getStatus(),false,jsonResponse.getStatusText(),null);
+				throw new Error(status,false,statusText,null);
 			}
 		} catch (UnirestException e) {
 			Pattern p = Pattern.compile(".*TimeoutException.*");
@@ -81,16 +112,29 @@ public class Paybook {
 	}//End of call
 	
 	public static JSONObject call(String endpoint, Method method, HashMap<String, Object> data) throws Error{
-		return call(endpoint,method,data,null);
+		return call(endpoint,method,data,null,null);
+	}//End of call
+	
+	public static JSONObject call(String endpoint, Method method, HashMap<String, Object> data, Map<String, String> headers) throws Error{
+		return call(endpoint,method,data,headers,null);
 	}//End of call
 	
 	public static JSONObject call(Method method, HashMap<String, Object> data,String URL) throws Error{
-		return call(null,method,data,URL);
+		return call(null,method,data,null,URL);
+	}//End of call
+	
+	public static JSONObject call(Method method, HashMap<String, Object> data, Map<String, String> headers, String URL) throws Error{
+		return call(null,method,data,headers,URL);
 	}//End of call
 	
 	public static JSONObject call(String endpoint, Method method) throws Error{
 		HashMap<String, Object> data = new HashMap<String, Object>();
 		return call(endpoint,method,data,null);	
+	}//End of call
+	
+	public static JSONObject call(String endpoint, Method method, Map<String, String> headers) throws Error{
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		return call(endpoint,method,data,headers,null);	
 	}//End of call
 	
 	public static void log(String log){

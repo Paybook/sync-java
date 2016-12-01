@@ -1,8 +1,10 @@
 package com.paybook.sync;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -24,6 +26,8 @@ public class Attachment extends Paybook{
 	public String file;
 	public String mime;
 	public String url;
+	public HashMap<String,Object> extra;
+    public String content;
 	public String dt_refresh;
 
 	public Attachment() throws Error{
@@ -77,6 +81,38 @@ public class Attachment extends Paybook{
     public static List<Attachment> get(String id_user) throws Error{
     	HashMap<String, Object> options = new HashMap<String, Object>();
     	return get(null,id_user,options);
+    }//End of get
+    
+	private static List<Attachment> get(Session session, String id_user, String id_attachment) throws Error{
+		List<Attachment> attachments  = new ArrayList<Attachment>();;
+		JSONObject response = null;
+		try{
+			HashMap<String, Object> data = new HashMap<String,Object>();
+			if(session != null && StringUtils.isBlank(id_user)){
+				data.put("token", session.token);
+			}else if(session == null && StringUtils.isNotBlank(id_user)){
+				data.put("api_key", Paybook.api_key);
+				data.put("id_user", id_user);
+			}//End of IF
+			Map<String,String> headers = new HashMap<String,String>();
+			headers.put("Content-Type", "application/xml");
+			response = call("attachments/"+id_attachment, Method.GET, data, headers);
+			String responseInString = response.get("content").toString();
+			Attachment attachment = new Attachment();
+			attachment.content = responseInString;
+			attachments.add(attachment);
+		}catch(Error e){
+			throw e;
+		}
+    	return attachments;
+	}//End of GET
+    
+    public static List<Attachment> get(Session session, String id_attachment) throws Error{
+    	return get(session,"",id_attachment);
+    }//End of get
+    
+    public static List<Attachment> get(String id_user, String id_attachment) throws Error{
+    	return get(null,id_user,id_attachment);
     }//End of get
     
     private static int get_count(Session session, String id_user, HashMap<String, Object> options) throws Error{

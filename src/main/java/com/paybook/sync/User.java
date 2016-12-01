@@ -95,10 +95,10 @@ public class User extends Paybook{
 
     
 	public static List<User> get(HashMap<String, Object> data) throws Error{
-		data.put("api_key", Paybook.api_key);
 		
 		List<User> users = null;	
 		try {
+			data.put("api_key", Paybook.api_key);
 			JSONObject response = call("users/", Method.GET, data);
 			String responseInString = response.get("response").toString();
 			ObjectMapper mapper = new ObjectMapper();
