@@ -9,11 +9,11 @@ Esta es la librería de Paybook para Java. Mediante esta librería usted puede i
 
 Antes de consultar la documentación puedes tomar alguno de nuestros tutoriales:
 
-- [Quickstart para sincronizar al SAT](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_sat.java)
+- [Quickstart para sincronizar al SAT](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_sat.md)
 
-- [Quickstart para sincronizar una cuenta bancaria con credenciales sencillas (usuario y contraseña)](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_normal.java)
+- [Quickstart para sincronizar una cuenta bancaria con credenciales sencillas (usuario y contraseña)](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_normal_bank.md)
 
-- [Quickstart para sincronizar una cuenta bancaria con token (usuario y contraseña)](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_token.java)
+- [Quickstart para sincronizar una cuenta bancaria con token (usuario y contraseña)](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_token_bank.md)
 
 ## Recordatorios:
 
