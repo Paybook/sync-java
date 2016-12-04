@@ -9,7 +9,7 @@ Para consumir el API de Paybook lo primero que tenemos que hacer es instalar la 
 
 ##Ejecución:
 
-Este tutorial está basado en el script [quickstart_sat.java](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_normal.java) de paquete com.quickstarts, por lo que puedes clonar el proyecto de la carpeta editar el main en Quickstart.java, configurar los valores YOUR_API_KEY, YOUR_RFC y YOUR_CIEC, ejecutarlo:
+Este tutorial está basado en el script [quickstart_sat.java](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_normal.java) de paquete com.quickstarts, por lo que puedes clonar el proyecto de la carpeta editar el main en Quickstart.java, configurar los valores BANK_USERNAME y BANK_PASSWORD, ejecutarlo:
 
 ```java
 public class Quickstart {	
