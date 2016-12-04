@@ -13,28 +13,27 @@ A lo largo de este tutorial te enseñaremos como consumir el API Rest de Paybook
 
 La documentación completa de la librería la puedes consultar [aquí](https://github.com/Paybook/sync-php/blob/master/README.md) 
 
-##En la consola:
+## Ejecución:
 
 ####1. Instalamos la librería de Paybook y dependencias:
 
-Para consumir el API de Paybook lo primero que tenemos que hacer es instalar la libreria de Paybook, puede descargar el .jar e incluirlo a sus dependencias:
+Para consumir el API de Paybook lo primero que tenemos que hacer es instalar la libreria de Paybook, puede descargar el .jar e incluirlo a sus dependencias.
 
 ####2. Ejecutamos el Script:
 Este tutorial está basado en el script [quickstart_sat.java](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_sat.java) de paquete com.quickstarts, por lo que puedes clonar el proyecto de la carpeta editar el main en Quickstart.java, configurar los valores YOUR_API_KEY, YOUR_RFC y YOUR_CIEC, ejecutarlo:
 
-
-    public class Quickstart {	
-        public static void main(String[] args) {
-		    //quickstart_sat qs = new quickstart_sat();
-		    //qs.start();
-		    
-		    quickstart_normal qn = new quickstart_normal();
-		    qn.start();
-		
-		    //quickstart_token qt = new quickstart_token();
-		    //qt.start();
-	    }//End of main
-    }
+```java
+public class Quickstart {	
+	public static void main(String[] args) {
+		quickstart_sat qs = new quickstart_sat();
+		qs.start();    
+		//quickstart_normal qn = new quickstart_normal();
+		//qn.start();
+		//quickstart_token qt = new quickstart_token();
+		//qt.start();
+	}//End of main
+}
+```
 
 A continuación explicaremos detalladamente la lógica del script que acabas de ejecutar.
 
@@ -129,50 +128,50 @@ Una vez registradas las credenciales se obtiene el primer estado (Código 100), 
 
 ```java
 System.out.println("Wait for validation");
-			boolean bank_sync_completed = false;
-			while(!bank_sync_completed ){
-				Thread.sleep(1000);
-				List<HashMap<String,Object>> status = credentials.get_status(session);
-				System.out.println(status);
-				int last_index = status.size()-1;
-				int code = (Integer) status.get(last_index).get("code");
-				if(code >= 200 && code < 400){
-					bank_sync_completed = true;
-					break;
-				}else if((code >= 400 && code<410) || (code >= 500 && code<=504)){
-					return false;
-				}//End of if
-			}//End of while
+boolean bank_sync_completed = false;
+while(!bank_sync_completed ){
+	Thread.sleep(1000);
+	List<HashMap<String,Object>> status = credentials.get_status(session);
+	System.out.println(status);
+	int last_index = status.size()-1;
+	int code = (Integer) status.get(last_index).get("code");
+	if(code >= 200 && code < 400){
+		bank_sync_completed = true;
+		break;
+	}else if((code >= 400 && code<410) || (code >= 500 && code<=504)){
+		return false;
+	}//End of if
+}//End of while
 ```
 
 ####12. Consultamos las facturas sincronizadas:
 Una vez que ya hemos checado el estado de la sincronización y hemos verificado que ha terminado (código 200) podemos consultar las facturas sincronizadas:
 
-	HashMap<String,Object> options = new HashMap<String,Object>();
-	options.put("id_credential", credentials.id_credential);
-	options.put("limit", REQUEST_LIMIT);
-			
-	transactions = Transaction.get(session, options);
-	System.out.println("Bank transactions: " + transactions.size());
+```java
+HashMap<String,Object> options = new HashMap<String,Object>();
+options.put("id_credential", credentials.id_credential);
+options.put("limit", REQUEST_LIMIT);			
+transactions = Transaction.get(session, options);
+System.out.println("Bank transactions: " + transactions.size());
+```
 
 ####13. Consultamos la información de archivos adjuntos:
 Podemos también consultar los archivos adjuntos a estas facturas, recordemos que por cada factura el SAT tiene una archivo XML y un archivo PDF:
-```php
-$sat_attachments = paybook\Attachment::get($session, null, null, $options);
-_print('SAT attachments: '.strval(count($sat_attachments)));
+```java
+attachments = Attachment.get(session, options);
+System.out.println("Bank attachments: " + attachments.size());
 ```
 
 ####14. Obtenemos el XML y PDF de alguna factura:
 Podemos descargar estos archivos:
 
-	attachments = Attachment.get(session, options);
-	System.out.println("Bank attachments: " + attachments.size());
-			
-	if(attachments.size() > 0){
-		String id_attachment = attachments.get(0).id_attachment;
-		attachment = Attachment.get(session, id_attachment).get(0);
-		System.out.println(attachment.content);
-	}//End of IF
+```java	
+if(attachments.size() > 0){
+	String id_attachment = attachments.get(0).id_attachment;
+	attachment = Attachment.get(session, id_attachment).get(0);
+	System.out.println(attachment.content);
+}//End of IF
+```
 
 ¡Felicidades! has terminado con este tutorial. 
 
@@ -182,7 +181,7 @@ Podemos descargar estos archivos:
 
 - Revisar el tutorial de como sincronizar una institución bancaria con token [aquí](https://github.com/Paybook/sync-java/blob/master/src/main/java/com/quickstarts/quickstart_token_bank.md)
 
-- Puedes consultar y analizar la documentación completa de la librería [aquí](https://github.com/Paybook/sync-java)
+- Puedes consultar y analizar la documentación completa de la librería [aquí](https://github.com/Paybook/sync-java/blob/master/README.md)
 
 - Puedes consultar y analizar la documentación del API REST [aquí](https://www.paybook.com/sync/docs)
 
