@@ -17,14 +17,15 @@ public class Transaction extends Paybook{
 	public String id_transaction;
 	public String id_user;
 	public String id_site;
+	public String id_external;
 	public String id_site_organization;
 	public String id_site_organization_type;
 	public String id_account;
 	public String id_account_type;
 	public String id_currency;
-	public String is_disable;
+	public int is_disable;
 	public String description;
-	public String amount;
+	public float amount;
 	public String currency;
 	public List<HashMap<String, Object>> attachments;
 	public HashMap<String, Object> extra;

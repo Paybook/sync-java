@@ -12,13 +12,26 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+/**
+* Almost all the classes inherit from Paybook Class so they can access to its attributes and methods
+*
+* @author  Mateo
+* @version 1.0
+* @since   2016-12-01 
+*/
+
 public class Paybook {
+	
 	static final String paybook_url = "https://sync.paybook.com/v1/";
 	
 	protected static String api_key;
 	protected static Boolean logger;
 	protected static String __INDENT__ = "		";
 	
+	/**
+	* Available API Sync methods 
+	*/
+
 	public enum Method {
 		POST("POST"),
 		GET("GET"),
@@ -34,20 +47,45 @@ public class Paybook {
 	    }
 	}//End of method
 	
+	/**
+	 * Class Constructor
+	 * @author: Mateo
+	 * */
 	public Paybook() {
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Method for initialize SDK
+	 * @param api_key Paybook API KEY 
+	 * */
 	public static void init(String api_key){
 		Paybook.api_key = api_key;
 		Paybook.logger = false;
     }//End of init
 	
+	/**
+	* Method for initialize SDK
+	* @param api_key Paybook API KEY
+	* @param logger Flag to log activity
+	*/
+	
 	public static void init(String api_key,Boolean logger){
 		Paybook.api_key = api_key;
 		Paybook.logger = logger;
     }//End of init
-
+	
+	/**
+	* This method should be used for the Sync API connection in order to centralize the call to the API in just one method.
+	* @param endpoint Paybook API KEY
+	* @param method Flag to log activity
+	* @param data Flag to log activity
+	* @param headers Flag to log activity
+	* @param URL Flag to log activity
+	* @return JSONObject API Response
+	* @throws Error Error class
+	*/
+	
 	public static JSONObject call(String endpoint, Method method, HashMap<String, Object> data, Map<String, String> headers, String URL) throws Error{
 		
 		try {

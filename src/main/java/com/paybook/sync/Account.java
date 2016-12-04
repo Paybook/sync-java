@@ -21,7 +21,7 @@ public class Account extends Paybook{
     public String id_site_organization;
     public String name;
     public String number;
-    public int balance;
+    public float balance;
     public Site site;
     public String id_account_type;
     public String account_type;

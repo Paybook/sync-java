@@ -3,23 +3,16 @@ package com.quickstarts;
 import java.util.HashMap;
 import java.util.List;
 
-import com.paybook.sync.Attachment;
-import com.paybook.sync.Catalogues;
-import com.paybook.sync.Credentials;
+import com.paybook.sync.*;
 import com.paybook.sync.Error;
-import com.paybook.sync.Paybook;
-import com.paybook.sync.Session;
-import com.paybook.sync.Site;
-import com.paybook.sync.Transaction;
-import com.paybook.sync.User;
 
 public class quickstart_sat {
 	static final String YOUR_API_KEY = "PAYBOOK_API_KEY";
 	static final boolean test_environment = false;
 	static final String BANK_NAME = "CIEC";
-	static final String BANK_USERNAME = "RFC";
-	static final String BANK_PASSWORD = "CIEC";
-	static final String USERNAME = BANK_USERNAME;
+	static final String SAT_RFC = "RFC";
+	static final String SAT_CIEC = "CIEC";
+	static final String USERNAME = SAT_RFC;
 	static final int REQUEST_LIMIT = 100;
     
 	User user;
@@ -75,8 +68,8 @@ public class quickstart_sat {
 			
 			
 			HashMap<String,Object> credentials_data = new HashMap<String,Object>();
-			credentials_data.put("rfc", BANK_USERNAME);
-			credentials_data.put("password", BANK_PASSWORD);
+			credentials_data.put("rfc", SAT_RFC);
+			credentials_data.put("password", SAT_CIEC);
 			credentials = new Credentials(session,bank_site.id_site,credentials_data); 
 			System.out.println("Credentials username: " + credentials.username);
 			

@@ -12,6 +12,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+* Users are logical segmentations for end-users. 
+* It's a best practice to register users in order to have their information grouped and have control on both ends. 
+* It is required to have at least one user registered to create credentials.
+* @author  Mateo
+* @version 1.0
+* @since   2016-12-01 
+*/
+
 public class User extends Paybook{
 	public String id_user;
     public String id_external;
@@ -19,6 +28,12 @@ public class User extends Paybook{
     public String dt_create;
     public String dt_modify;
     
+    /**
+	* @param name User name.
+	* @param id_user User ID, this is the actual subtoken that is needed in other resources.
+	* @param id_external External ID, this field can be null and be used to keep track of that user with an external ID.
+	* @throws Error Error class
+	*/
     public User(String name,String id_user,String id_external) throws Error{
     	List<User> users = null;
     	User user = null;
@@ -82,10 +97,21 @@ public class User extends Paybook{
     	this.dt_modify = user.dt_modify;
     }//End of constructor
     
+    /**
+	* This method should be used for the Sync API connection in order to centralize the call to the API in just one method.
+	* @param name User name.
+	* @throws Error Error class
+	*/
     public User(String name) throws Error{
     	this(name,"","");
     }
     
+    /**
+	* This method should be used for the Sync API connection in order to centralize the call to the API in just one method.
+	* @param name User name.
+	* @param id_user User ID, this is the actual subtoken that is needed in other resources.
+	* @throws Error Error class
+	*/
     public User(String name, String id_user) throws Error{
     	this(name,id_user,"");
     }
