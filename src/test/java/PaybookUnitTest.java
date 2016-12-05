@@ -172,10 +172,10 @@ public class PaybookUnitTest {
     {
         try {
         	System.out.println("K_1.- Get User by ID");
-        	user = new User("",user.id_user);
-        	System.out.println("Username: " + user.name);
-        	System.out.println("User_id: " + user.id_user);
-        	System.out.println("User_external: " + user.id_external);
+        	User user_by_id = new User("",user.id_user);
+        	System.out.println("Username: " + user_by_id.name);
+        	System.out.println("User_id: " + user_by_id.id_user);
+        	System.out.println("User_external: " + user_by_id.id_external);
         	assertNotNull(user);
 		} catch (Error e) {
 			System.out.println(e.code);
@@ -188,10 +188,10 @@ public class PaybookUnitTest {
     {
         try {
         	System.out.println("K_2.- Get User by External ID");
-        	user = new User("","",USER_ID_EXTERNAL);
-        	System.out.println("Username: " + user.name);
-        	System.out.println("User_id: " + user.id_user);
-        	System.out.println("User_external: " + user.id_external);
+        	User user_by_external_id = new User("","",USER_ID_EXTERNAL);
+        	System.out.println("Username: " + user_by_external_id.name);
+        	System.out.println("User_id: " + user_by_external_id.id_user);
+        	System.out.println("User_external: " + user_by_external_id.id_external);
         	assertNotNull(user);
 		} catch (Error e) {
 			System.out.println(e.code);

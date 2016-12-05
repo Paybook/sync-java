@@ -64,9 +64,9 @@ public class User extends Paybook{
 	    			responseInString = response.get("response").toString();
 	    			user = mapper.readValue(responseInString, User.class);
 	    		}else{
-	    			data.put("id_user", id_user);
-	    			response = call("users/", Method.GET, data);
+	    			response = call("users/" + id_user, Method.GET, data);
 	    			responseInString = response.get("response").toString();
+	    			System.out.println(responseInString);
 	    			users = mapper.readValue(responseInString, new TypeReference<List<User>>(){});
 	    	    	user = users.get(0);
 	    		}

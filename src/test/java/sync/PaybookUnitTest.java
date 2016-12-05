@@ -1,12 +1,12 @@
-package sync;
-
 import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 
 import java.util.HashMap;
 import java.util.List;
 
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import com.paybook.sync.*;
@@ -18,7 +18,7 @@ public class PaybookUnitTest {
 
 	static final String PAYBOOK_API_KEY = "PAYBOOK_API_KEY";
 	static final String PAYBOOK_WRONG_API_KEY = "PAYBOOK_WRONG_API_KEY";
-	static final String USERNAME = "java_13";
+	static final String USERNAME = "java_15";
 	static final String USER_ID_EXTERNAL = USERNAME + "_id_external";
 	
 	static final boolean IS_TEST = true;
@@ -27,6 +27,7 @@ public class PaybookUnitTest {
 	static final String CREDENTIAL_PASSWORD = "password";
 	static final String CREDENTIAL_USERNAME_VALUE = "test";
 	static final String CREDENTIAL_PASSWORD_VALUE = "test";
+	static final int REQUEST_LIMIT = 100;
 	
 	static final boolean LOGGER = false;
 	
@@ -35,6 +36,7 @@ public class PaybookUnitTest {
 	static Site SATSite = null;
 	static Credentials credential;
 	static Site tokenSite;
+	static List<Attachment> attachments;
 	
 	@Test
     public void A_InicializeWrongAPIKEY(){
@@ -55,7 +57,7 @@ public class PaybookUnitTest {
 			assertEquals("Result: ", e.code, 401);
 		}
     }//End of RequestWithWrongAPIKEY
-	
+
 	@Test
     public void C_InicializeValidAPIKEY()
     {	
@@ -157,19 +159,39 @@ public class PaybookUnitTest {
         	System.out.println("	User external: " + user.id_external);
         	assertNotNull(user.name);
 		} catch (Error e) {
-			fail();
+			if(e.code == 400){
+				System.out.println("The user already exists");
+			}else{
+				fail();
+			}
 		}
-    }//End of updateUser*/
+    }//End of updateUser
 	
 	@Test
-    public void K_getUserByExternalID()
+    public void K_1_getUserByID()
     {
         try {
-        	System.out.println("K.- Get User by External ID");
-        	user = new User("","",USER_ID_EXTERNAL);
-        	System.out.println("Username: " + user.name);
-        	System.out.println("User_id: " + user.id_user);
-        	System.out.println("User_external: " + user.id_external);
+        	System.out.println("K_1.- Get User by ID");
+        	User user_by_id = new User("",user.id_user);
+        	System.out.println("Username: " + user_by_id.name);
+        	System.out.println("User_id: " + user_by_id.id_user);
+        	System.out.println("User_external: " + user_by_id.id_external);
+        	assertNotNull(user);
+		} catch (Error e) {
+			System.out.println(e.code);
+			fail();
+		}
+    }//End of getUserByID
+	
+	@Test
+    public void K_2_getUserByExternalID()
+    {
+        try {
+        	System.out.println("K_2.- Get User by External ID");
+        	User user_by_external_id = new User("","",USER_ID_EXTERNAL);
+        	System.out.println("Username: " + user_by_external_id.name);
+        	System.out.println("User_id: " + user_by_external_id.id_user);
+        	System.out.println("User_external: " + user_by_external_id.id_external);
         	assertNotNull(user);
 		} catch (Error e) {
 			System.out.println(e.code);
@@ -192,7 +214,7 @@ public class PaybookUnitTest {
 			fail();
 		}
     }//End of createUserSession
-	
+
 	@Test
     public void M_verifySession()
     {
@@ -655,13 +677,15 @@ public class PaybookUnitTest {
 			System.out.println(e.message);
 			fail();
 		} 
-	}//End of sendToken
+	}//End of getAccounts
 	
 	@Test
 	public void Z_23_getTransaction(){
 		System.out.println("Z_23.- Get Transactions");
 		try {
-			List<Transaction> transactions = Transaction.get(session);
+			HashMap<String,Object> options = new HashMap<String,Object>();
+			options.put("limit", REQUEST_LIMIT);
+			List<Transaction> transactions = Transaction.get(session, options);
 			System.out.println("Transactions: " + transactions.size());
 			assertNotNull(transactions);
 		} catch (Error e) {
@@ -700,17 +724,16 @@ public class PaybookUnitTest {
 			System.out.println(e.message);
 			fail();
 		} 
-	}//End of sendToken
-	
+	}//End of getCountAttachment
+
 	@Test
-	public void Z_26_getAttachment(){
-		System.out.println("Z_26.- Get Attachment");
+	public void Z_26_getAttachments(){
+		System.out.println("Z_26.- Get Attachments");
 		try {
-			List<Attachment> attachments = Attachment.get(session);
+			HashMap<String,Object> options = new HashMap<String,Object>();
+			options.put("limit", REQUEST_LIMIT);
+			attachments = Attachment.get(session,options);
 			System.out.println("Attachments: " + attachments.size());
-			String id_attachment = attachments.get(0).id_attachment;
-			HashMap<String,Object> attachment = Attachment.get_extra(session, id_attachment);
-			System.out.println(attachment.toString());
 			assertNotNull(attachments);
 		} catch (Error e) {
 			// TODO Auto-generated catch block
@@ -718,6 +741,42 @@ public class PaybookUnitTest {
 			System.out.println(e.message);
 			fail();
 		} 
-	}//End of getTransaction
+	}//End of getAttachment
+	
+	@Test
+	public void Z_27_getAttachmentContent(){
+		System.out.println("Z_27.- Get Attachment Content");
+		try {
+			String id_attachment = attachments.get(0).id_attachment;
+			System.out.println("ID ATTACHMENT: " + id_attachment);
+			String content_file = Attachment.get(session,id_attachment).get(0).content;
+			System.out.println(content_file);
+
+			assertNotNull(attachments);
+		} catch (Error e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.code);
+			System.out.println(e.message);
+			fail();
+		} 
+	}//End of getAttachmentContent
+	
+	@Test
+	public void Z_28_getAttachmentExtra(){
+		System.out.println("Z_28.- Get Attachment Extra");
+		try {
+			String id_attachment = attachments.get(0).id_attachment;
+			HashMap<String,Object> attachment_extra = Attachment.get_extra(session, id_attachment);
+			System.out.println(attachment_extra);
+			assertNotNull(attachment_extra);
+		} catch (Error e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.code);
+			System.out.println(e.message);
+			fail();
+		} 
+	}//End of getAttachmentExtra
+	
 	
 }
+
